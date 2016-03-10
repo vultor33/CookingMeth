@@ -41,13 +41,14 @@
 #include "edge.h"
 #include "atom.h"
 #include "graphwidget.h"
+#include "atomstruct.h"
 
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 #include <QStyleOption>
 
-Atom::Atom(GraphWidget *graphWidget)
+Atom::Atom(GraphWidget *graphWidget, struct atomType atomIn)
     : graph(graphWidget)
 {
     setFlag(ItemSendsGeometryChanges); // quando o cara e movimentado voce manda um aviso
@@ -57,13 +58,23 @@ Atom::Atom(GraphWidget *graphWidget)
     //characteristics
     vel.setX(0);
     vel.setY(0);
-    xInitialDraw = -10;
+    xInitialDraw = -20;
     yInitialDraw = xInitialDraw;
     horizSize = -2 * xInitialDraw;
     vertSize = -2 * xInitialDraw;
     adjustBoundingSize = 2;
-    lightColor.setNamedColor("#0000ff");
-    darkColor.setNamedColor("#000080");
+
+
+    lightColor.setNamedColor("#ffffff");
+    darkColor.setNamedColor("#a0a0a4");
+
+    if(atomIn.atomName != "")
+    {
+        name = new QGraphicsSimpleTextItem(this);
+        name->setText("H");
+        name->setPos((int)(xInitialDraw/2),(int)(-3 + yInitialDraw/2));
+        name->setFont(QFont("Times", -xInitialDraw, QFont::Bold));
+    }
 }
 
 void Atom::addEdge(Edge *edge)

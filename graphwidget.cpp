@@ -41,6 +41,7 @@
 #include "graphwidget.h"
 #include "edge.h"
 #include "atom.h"
+#include "atomstruct.h"
 
 #include <math.h>
 
@@ -63,8 +64,9 @@ GraphWidget::GraphWidget(QWidget *parent)
     setMinimumSize(400, 400);
     setWindowTitle(tr("Elastic Nodes"));
 
-    node1 = new Atom(this);
-    centerNode = new Atom(this);
+    showLabel = true;
+    node1 = new Atom(this,defineAtom(1));
+    centerNode = new Atom(this,defineAtom(1));
     scene->addItem(node1);
     scene->addItem(centerNode);
     node1->setPos(-50, -50);
@@ -225,3 +227,32 @@ void GraphWidget::zoomOut()
 {
     scaleView(1 / qreal(1.2));
 }
+
+struct atomType GraphWidget::defineAtom(int nAtomic)
+{
+    struct atomType atomOut;
+    switch(nAtomic)
+    {
+    case 1:
+        atomOut.r = 10;
+        atomOut.lightColor = "#ffffff";
+        atomOut.darkColor = "#a0a0a4";
+        atomOut.atomName = "H";
+    }
+    if(!showLabel)
+        atomOut.atomName = "";
+
+    return atomOut;
+}
+
+
+/*
+namespace cook
+{
+atomType Hydrogen;
+Hydrogen.r = 10;
+Hydrogen.lightColor = "#ffffff";
+Hydrogen.darkColor = "#a0a0a4";
+Hydrogen.atomName = "H";
+};
+*/

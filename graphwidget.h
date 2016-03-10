@@ -45,6 +45,8 @@
 #include <QList>
 #include <vector>
 
+#include "atomstruct.h"
+
 class Atom;
 
 //! [0]
@@ -80,6 +82,8 @@ private:
     void changeMoleculeVelocity(std::vector<int> &mol, QPointF newVel);
     bool checkIfMoleculeBounced(std::vector<int> &mol);
 
+    bool showLabel;
+    struct atomType defineAtom(int nAtomic);
 };
 //! [0]
 

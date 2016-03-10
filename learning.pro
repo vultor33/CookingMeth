@@ -20,4 +20,5 @@ SOURCES += main.cpp \
 HEADERS  += \
     edge.h \
     graphwidget.h \
-    atom.h
+    atom.h \
+    atomstruct.h

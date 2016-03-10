@@ -45,17 +45,18 @@
 #include <QList>
 #include <QPainter>
 
+#include "atomstruct.h"
+
 class Edge;
 class GraphWidget;
 QT_BEGIN_NAMESPACE
 class QGraphicsSceneMouseEvent;
 QT_END_NAMESPACE
 
-//! [0]
 class Atom : public QGraphicsItem
 {
 public:
-    Atom(GraphWidget *graphWidget);
+    Atom(GraphWidget *graphWidget, struct atomType atomIn);
 
     void addEdge(Edge *edge);
     QList<Edge *> edges() const;
@@ -89,6 +90,7 @@ private:
     QList<Edge *> edgeList;
     QPointF newPos;
     GraphWidget *graph;
+    QGraphicsSimpleTextItem *name;
     QPointF vel;
 
     // creating figure
