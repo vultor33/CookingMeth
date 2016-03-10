@@ -51,19 +51,17 @@
 Node::Node(GraphWidget *graphWidget)
     : graph(graphWidget)
 {
-    //setFlag(ItemIsMovable); // com isso aqui o drag ja funciona
     setFlag(ItemSendsGeometryChanges); // quando o cara e movimentado voce manda um aviso
     setCacheMode(DeviceCoordinateCache);// otimiza renderizacao
     setZValue(-1);
 
+    //characteristics
     vel.setX(0);
-    vel.setY(1); //zero nao funciona a velocidade.
-
-    //paint properties.
+    vel.setY(0); //zero nao funciona a velocidade.
     xInitialDraw = -10;
-    yInitialDraw = yInitialDraw;
-    horizSize = - 2 * xInitialDraw;
-    vertSize = - 2 * xInitialDraw;
+    yInitialDraw = xInitialDraw;
+    horizSize = -2 * xInitialDraw;
+    vertSize = -2 * xInitialDraw;
     adjustBoundingSize = 2;
     lightColor.setNamedColor("#0000ff");
     darkColor.setNamedColor("#000080");
@@ -96,6 +94,11 @@ void Node::changeVel(QPointF addVel)
 QPointF Node::getVel()
 {
     return vel;
+}
+
+void Node::setSphereRadius(qreal radius)
+{
+    xInitialDraw = radius;
 }
 
 //! [2]

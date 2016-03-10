@@ -74,6 +74,8 @@ public:
     void changeVel(QPointF addVel);
     QPointF getVel();
 
+    void setSphereRadius(qreal radius);
+
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) Q_DECL_OVERRIDE;
 

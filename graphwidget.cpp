@@ -128,16 +128,8 @@ void GraphWidget::timerEvent(QTimerEvent *event)
     foreach (Node *node, nodes)
         node->calculateForces();
 
-    bool itemsMoved = false;
-    foreach (Node *node, nodes) {
-        if (node->advance())
-            itemsMoved = true;
-    }
-
-    if (!itemsMoved) {
-        killTimer(timerId);
-        timerId = 0;
-    }
+    foreach (Node *node, nodes)
+        node->advance();
 }
 //! [4]
 
