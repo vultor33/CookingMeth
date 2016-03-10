@@ -75,8 +75,7 @@ public:
     void changeVel(QPointF addVel);
     void invertVel(int bounceType);
     QPointF getVel();
-
-    void setSphereRadius(qreal radius);
+    qreal getRadius();
 
     int checkBounce();//0-no | 1-x | 2-y | 3-xy
 

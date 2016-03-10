@@ -48,6 +48,7 @@
 #include <QPainter>
 #include <QStyleOption>
 #include <QString>
+#include <QDebug>
 
 Atom::Atom(GraphWidget *graphWidget, struct atomType atomIn)
     : graph(graphWidget)
@@ -121,9 +122,9 @@ QPointF Atom::getVel()
     return vel;
 }
 
-void Atom::setSphereRadius(qreal radius)
+qreal Atom::getRadius()
 {
-    xInitialDraw = radius;
+    return -xInitialDraw;
 }
 
 int Atom::checkBounce()
@@ -131,24 +132,23 @@ int Atom::checkBounce()
     QRectF sceneRect = scene()->sceneRect();
     int bounce = 0;
     if(
-            ((sceneRect.left() + xInitialDraw) > newPos.x())||
-            ((sceneRect.right() - xInitialDraw) < newPos.x()))
+            ((sceneRect.left() + xInitialDraw + horizSize) > newPos.x())||
+            ((sceneRect.right() - xInitialDraw - horizSize) < newPos.x()))
         bounce += 1;
     if(
-            ((sceneRect.top() + yInitialDraw) > newPos.y())||
-            ((sceneRect.bottom() - yInitialDraw) < newPos.y()))
+            ((sceneRect.top() + yInitialDraw + vertSize) > newPos.y())||
+            ((sceneRect.bottom() - yInitialDraw - vertSize) < newPos.y()))
         bounce += 2;
 
     return bounce;
 }
 
-
-//! [2]
 void Atom::calculateForces()
 {
     newPos = pos() + vel;
-
 }
+
+
 
 bool Atom::advance()
 {

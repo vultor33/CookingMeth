@@ -65,7 +65,7 @@ GraphWidget::GraphWidget(QWidget *parent)
     setWindowTitle(tr("Elastic Nodes"));
 
     showLabel = true;
-    atom1 = defineAtom(1);
+    atom1 = defineAtom(9);
     atom2 = defineAtom(17);
     node1 = new Atom(this,atom1);
     centerNode = new Atom(this,atom2);
