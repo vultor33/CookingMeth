@@ -47,6 +47,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 #include <QStyleOption>
+#include <QString>
 
 Atom::Atom(GraphWidget *graphWidget, struct atomType atomIn)
     : graph(graphWidget)
@@ -58,20 +59,19 @@ Atom::Atom(GraphWidget *graphWidget, struct atomType atomIn)
     //characteristics
     vel.setX(0);
     vel.setY(0);
-    xInitialDraw = -20;
+    xInitialDraw = -atomIn.r;
     yInitialDraw = xInitialDraw;
     horizSize = -2 * xInitialDraw;
     vertSize = -2 * xInitialDraw;
     adjustBoundingSize = 2;
 
-
-    lightColor.setNamedColor("#ffffff");
-    darkColor.setNamedColor("#a0a0a4");
+    lightColor.setNamedColor(atomIn.lightColor);
+    darkColor.setNamedColor(atomIn.darkColor);
 
     if(atomIn.atomName != "")
     {
         name = new QGraphicsSimpleTextItem(this);
-        name->setText("H");
+        name->setText(atomIn.atomName);
         name->setPos((int)(xInitialDraw/2),(int)(-3 + yInitialDraw/2));
         name->setFont(QFont("Times", -xInitialDraw, QFont::Bold));
     }

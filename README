@@ -1,3 +1,5 @@
 Jogo educativo de quimica em Qt
 
+Corrigir o edge que nao esta indo ate a borda do atomo
 
+A colisao com a parede tambem esta muito errada

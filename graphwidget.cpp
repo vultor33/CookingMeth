@@ -65,8 +65,10 @@ GraphWidget::GraphWidget(QWidget *parent)
     setWindowTitle(tr("Elastic Nodes"));
 
     showLabel = true;
-    node1 = new Atom(this,defineAtom(1));
-    centerNode = new Atom(this,defineAtom(1));
+    atom1 = defineAtom(1);
+    atom2 = defineAtom(17);
+    node1 = new Atom(this,atom1);
+    centerNode = new Atom(this,atom2);
     scene->addItem(node1);
     scene->addItem(centerNode);
     node1->setPos(-50, -50);
@@ -238,21 +240,23 @@ struct atomType GraphWidget::defineAtom(int nAtomic)
         atomOut.lightColor = "#ffffff";
         atomOut.darkColor = "#a0a0a4";
         atomOut.atomName = "H";
+        break;
+    case 9:
+        atomOut.r = 20;
+        atomOut.lightColor = "#ff0000";
+        atomOut.darkColor = "#800000";
+        atomOut.atomName = "F";
+        break;
+    case 17:
+        atomOut.r = 30;
+        atomOut.lightColor = "#00ff00";
+        atomOut.darkColor = "#008000";
+        atomOut.atomName = "Cl";
+        break;
     }
+
     if(!showLabel)
         atomOut.atomName = "";
 
     return atomOut;
 }
-
-
-/*
-namespace cook
-{
-atomType Hydrogen;
-Hydrogen.r = 10;
-Hydrogen.lightColor = "#ffffff";
-Hydrogen.darkColor = "#a0a0a4";
-Hydrogen.atomName = "H";
-};
-*/

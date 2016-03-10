@@ -1,14 +1,14 @@
 #ifndef ATOMSTRUCT_H
 #define ATOMSTRUCT_H
 
-#include <string>
+#include <QString>
 
 struct atomType
 {
     float r;
-    std::string lightColor;
-    std::string darkColor;
-    std::string atomName;
+    QString lightColor;
+    QString darkColor;
+    QString atomName;
 };
 
 

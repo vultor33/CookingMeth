@@ -84,6 +84,9 @@ private:
 
     bool showLabel;
     struct atomType defineAtom(int nAtomic);
+    struct atomType atom1;
+    struct atomType atom2;
+
 };
 //! [0]
 
