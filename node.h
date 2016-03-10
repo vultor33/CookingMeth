@@ -72,9 +72,12 @@ public:
 
     void setVel(QPointF newVel);
     void changeVel(QPointF addVel);
+    void invertVel(int bounceType);
     QPointF getVel();
 
     void setSphereRadius(qreal radius);
+
+    int checkBounce();//0-no | 1-x | 2-y | 3-xy
 
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) Q_DECL_OVERRIDE;
@@ -93,10 +96,10 @@ private:
     qreal yInitialDraw;
     qreal horizSize;
     qreal vertSize;
-    // all paint are inside boundingRect
     qreal adjustBoundingSize;
     QColor lightColor;
     QColor darkColor;
+
 };
 //! [0]
 

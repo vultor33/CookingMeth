@@ -91,6 +91,23 @@ void Node::changeVel(QPointF addVel)
     vel += addVel;
 }
 
+void Node::invertVel(int bounceType)
+{
+    switch(bounceType)
+    {
+    case 1:
+        setVel(QPointF(-vel.x(),vel.y()));
+        break;
+    case 2:
+        setVel(QPointF(vel.x(),-vel.y()));
+        break;
+    case 3:
+        setVel(QPointF(-vel.x(),-vel.y()));
+        break;
+    }
+}
+
+
 QPointF Node::getVel()
 {
     return vel;
@@ -101,30 +118,28 @@ void Node::setSphereRadius(qreal radius)
     xInitialDraw = radius;
 }
 
-//! [2]
-void Node::calculateForces()
+int Node::checkBounce()
 {
     QRectF sceneRect = scene()->sceneRect();
-    newPos = pos() + vel;
-    qreal xvel = vel.x();
-    qreal yvel = vel.y();
+    int bounce = 0;
     if(
             ((sceneRect.left() + xInitialDraw) > newPos.x())||
             ((sceneRect.right() - xInitialDraw) < newPos.x()))
-    {
-        newPos = pos();
-        xvel = -vel.x();
-    }
-
+        bounce += 1;
     if(
             ((sceneRect.top() + yInitialDraw) > newPos.y())||
             ((sceneRect.bottom() - yInitialDraw) < newPos.y()))
-    {
-        newPos = pos();
-        yvel = -vel.y();
-    }
+        bounce += 2;
 
-    setVel(QPointF(xvel,yvel));
+    return bounce;
+}
+
+
+//! [2]
+void Node::calculateForces()
+{
+    newPos = pos() + vel;
+
 }
 
 //    if((sceneRect.Left + xInitialDraw) > newPos.x())

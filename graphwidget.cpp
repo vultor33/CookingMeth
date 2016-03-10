@@ -45,6 +45,8 @@
 #include <math.h>
 
 #include <QKeyEvent>
+#include <QDebug>
+#include <vector>
 
 //! [0]
 GraphWidget::GraphWidget(QWidget *parent)
@@ -64,16 +66,18 @@ GraphWidget::GraphWidget(QWidget *parent)
 //! [0]
 
 //! [1]
+
     node1 = new Node(this);
     centerNode = new Node(this);
     scene->addItem(node1);
     scene->addItem(centerNode);
-
     node1->setPos(-50, -50);
     centerNode->setPos(0, 0);
+    molecule1.resize(2);
+    molecule1[0] = 0;
+    molecule1[1] = 1;
 
     scene->addItem(new Edge(node1, centerNode));
-
 }
 //! [1]
 
@@ -85,25 +89,53 @@ void GraphWidget::itemMoved()
 }
 //! [2]
 
+void GraphWidget::changeMoleculeVelocity(std::vector<int> &mol, QPointF newVel)
+{
+    for(size_t i = 0; i < mol.size(); i++ )
+    {
+        nodes[mol[i]]->changeVel(newVel);
+    }
+}
+
+bool GraphWidget::checkIfMoleculeBounced(std::vector<int> &mol)
+{
+    bool bounced = false;
+    int bounceType;
+    for(size_t i = 0; i < mol.size(); i++ )
+    {
+        bounceType = nodes[mol[i]]->checkBounce();
+        if(bounceType > 0)
+        {
+            bounced = true;
+            break;
+        }
+    }
+    if(!bounced)
+        return bounced;
+
+    for(size_t i = 0; i < mol.size(); i++ )
+    {
+        nodes[mol[i]]->invertVel(bounceType);
+    }
+    return bounced;
+}
+
+
 //! [3]
 void GraphWidget::keyPressEvent(QKeyEvent *event)
 {
     switch (event->key()) {
     case Qt::Key_Up:
-        centerNode->changeVel(QPointF(0,-1));
-        node1->changeVel(QPointF(0,-1));
+        changeMoleculeVelocity(molecule1,QPointF(0,-1));
         break;
     case Qt::Key_Down:
-        centerNode->changeVel(QPointF(0,1));
-        node1->changeVel(QPointF(0,1));
+        changeMoleculeVelocity(molecule1,QPointF(0,1));
         break;
     case Qt::Key_Left:
-        centerNode->changeVel(QPointF(-1,0));
-        node1->changeVel(QPointF(-1,0));
+        changeMoleculeVelocity(molecule1,QPointF(-1,0));
         break;
     case Qt::Key_Right:
-        centerNode->changeVel(QPointF(1,0));
-        node1->changeVel(QPointF(1,0));
+        changeMoleculeVelocity(molecule1,QPointF(1,0));
         break;
     case Qt::Key_Plus:
         zoomIn();
@@ -126,20 +158,19 @@ void GraphWidget::timerEvent(QTimerEvent *event)
 {
     Q_UNUSED(event);
 
-    QList<Node *> nodes;
     foreach (QGraphicsItem *item, scene()->items()) {
         if (Node *node = qgraphicsitem_cast<Node *>(item))
             nodes << node;
     }
-    //molecule 1, molecule 2
-
-
 
     foreach (Node *node, nodes)
         node->calculateForces();
 
-    foreach (Node *node, nodes)
-        node->advance();
+    if(!checkIfMoleculeBounced(molecule1))
+    {
+        foreach (Node *node, nodes)
+            node->advance();
+    }
 }
 //! [4]
 

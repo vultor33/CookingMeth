@@ -42,7 +42,8 @@
 #define GRAPHWIDGET_H
 
 #include <QGraphicsView>
-#include <QVector>
+#include <QList>
+#include <vector>
 
 class Node;
 
@@ -75,6 +76,11 @@ private:
     int timerId;
     Node *centerNode;
     Node *node1;
+    QList<Node *> nodes;
+    std::vector<int> molecule1;
+    void changeMoleculeVelocity(std::vector<int> &mol, QPointF newVel);
+    bool checkIfMoleculeBounced(std::vector<int> &mol);
+
 };
 //! [0]
 
