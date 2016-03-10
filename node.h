@@ -43,6 +43,7 @@
 
 #include <QGraphicsItem>
 #include <QList>
+#include <QPainter>
 
 class Edge;
 class GraphWidget;
@@ -84,6 +85,16 @@ private:
     QPointF newPos;
     GraphWidget *graph;
     QPointF vel;
+
+    // creating figure
+    qreal xInitialDraw;
+    qreal yInitialDraw;
+    qreal horizSize;
+    qreal vertSize;
+    // all paint are inside boundingRect
+    qreal adjustBoundingSize;
+    QColor lightColor;
+    QColor darkColor;
 };
 //! [0]
 

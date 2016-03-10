@@ -55,8 +55,18 @@ Node::Node(GraphWidget *graphWidget)
     setFlag(ItemSendsGeometryChanges); // quando o cara e movimentado voce manda um aviso
     setCacheMode(DeviceCoordinateCache);// otimiza renderizacao
     setZValue(-1);
-    vel.setX(3);
-    vel.setY(1);
+
+    vel.setX(0);
+    vel.setY(1); //zero nao funciona a velocidade.
+
+    //paint properties.
+    xInitialDraw = -10;
+    yInitialDraw = yInitialDraw;
+    horizSize = - 2 * xInitialDraw;
+    vertSize = - 2 * xInitialDraw;
+    adjustBoundingSize = 2;
+    lightColor.setNamedColor("#0000ff");
+    darkColor.setNamedColor("#000080");
 }
 //! [0]
 
@@ -96,12 +106,11 @@ void Node::calculateForces()
         return;
     }
 //! [2]
+
     QRectF sceneRect = scene()->sceneRect();
     newPos = pos() + vel;
-    newPos.setX(qMin(qMax(newPos.x(), sceneRect.left() + 10), sceneRect.right() - 10));
-    newPos.setY(qMin(qMax(newPos.y(), sceneRect.top() + 10), sceneRect.bottom() - 10));
-
-
+    newPos.setX(qMin(qMax(newPos.x(), sceneRect.left() + xInitialDraw), sceneRect.right() - xInitialDraw));
+    newPos.setY(qMin(qMax(newPos.y(), sceneRect.top() + yInitialDraw), sceneRect.bottom() - yInitialDraw));
 
 /*
 
@@ -167,8 +176,11 @@ bool Node::advance()
 //! [8]
 QRectF Node::boundingRect() const
 {
-    qreal adjust = 2;
-    return QRectF( -10 - adjust, -10 - adjust, 23 + adjust, 23 + adjust);
+    return QRectF(
+                xInitialDraw - adjustBoundingSize ,
+                yInitialDraw - adjustBoundingSize,
+                horizSize + adjustBoundingSize + 3,
+                vertSize + adjustBoundingSize + 3);
 }
 //! [8]
 
@@ -178,32 +190,28 @@ QRectF Node::boundingRect() const
 QPainterPath Node::shape() const
 {
     QPainterPath path;
-    path.addEllipse(-10, -10, 20, 20);
+    path.addEllipse(xInitialDraw, yInitialDraw, horizSize, vertSize);
     return path;
 }
 //! [9]
+
+
+
 
 //! [10]
 void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *)
 {
     painter->setPen(Qt::NoPen);
     painter->setBrush(Qt::darkGray);
-    painter->drawEllipse(-7, -7, 20, 20);
+    painter->drawEllipse(xInitialDraw +3, yInitialDraw +3, horizSize, vertSize);
 
-    QRadialGradient gradient(-3, -3, 10);
-    if (option->state & QStyle::State_Sunken) {
-        gradient.setCenter(3, 3);
-        gradient.setFocalPoint(3, 3);
-        gradient.setColorAt(1, QColor(Qt::yellow).light(120));
-        gradient.setColorAt(0, QColor(Qt::darkYellow).light(120));
-    } else {
-        gradient.setColorAt(0, Qt::yellow);
-        gradient.setColorAt(1, Qt::darkYellow);
-    }
+    QRadialGradient gradient((int)(xInitialDraw/3), (int)(xInitialDraw/3), (int)(horizSize/2));
+    gradient.setColorAt(0, lightColor);
+    gradient.setColorAt(1, darkColor);
+
     painter->setBrush(gradient);
-
     painter->setPen(QPen(Qt::black, 0));
-    painter->drawEllipse(-10, -10, 20, 20);
+    painter->drawEllipse(xInitialDraw, xInitialDraw, horizSize, vertSize);
 }
 //! [10]
 
