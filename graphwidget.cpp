@@ -64,13 +64,16 @@ GraphWidget::GraphWidget(QWidget *parent)
 //! [0]
 
 //! [1]
-    Node *node1 = new Node(this);
+    node1 = new Node(this);
     centerNode = new Node(this);
     scene->addItem(node1);
     scene->addItem(centerNode);
 
     node1->setPos(-50, -50);
     centerNode->setPos(0, 0);
+
+    scene->addItem(new Edge(node1, centerNode));
+
 }
 //! [1]
 
@@ -88,15 +91,19 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
     switch (event->key()) {
     case Qt::Key_Up:
         centerNode->changeVel(QPointF(0,-1));
+        node1->changeVel(QPointF(0,-1));
         break;
     case Qt::Key_Down:
         centerNode->changeVel(QPointF(0,1));
+        node1->changeVel(QPointF(0,1));
         break;
     case Qt::Key_Left:
         centerNode->changeVel(QPointF(-1,0));
+        node1->changeVel(QPointF(-1,0));
         break;
     case Qt::Key_Right:
         centerNode->changeVel(QPointF(1,0));
+        node1->changeVel(QPointF(1,0));
         break;
     case Qt::Key_Plus:
         zoomIn();
@@ -124,6 +131,9 @@ void GraphWidget::timerEvent(QTimerEvent *event)
         if (Node *node = qgraphicsitem_cast<Node *>(item))
             nodes << node;
     }
+    //molecule 1, molecule 2
+
+
 
     foreach (Node *node, nodes)
         node->calculateForces();

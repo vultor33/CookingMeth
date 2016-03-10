@@ -42,6 +42,7 @@
 #define GRAPHWIDGET_H
 
 #include <QGraphicsView>
+#include <QVector>
 
 class Node;
 
@@ -73,6 +74,7 @@ protected:
 private:
     int timerId;
     Node *centerNode;
+    Node *node1;
 };
 //! [0]
 

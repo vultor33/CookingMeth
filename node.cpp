@@ -104,16 +104,32 @@ void Node::setSphereRadius(qreal radius)
 //! [2]
 void Node::calculateForces()
 {
-    if (!scene() || scene()->mouseGrabberItem() == this) {
-        newPos = pos();
-        return;
-    }
-//! [2]
-
     QRectF sceneRect = scene()->sceneRect();
     newPos = pos() + vel;
-    newPos.setX(qMin(qMax(newPos.x(), sceneRect.left() + xInitialDraw), sceneRect.right() - xInitialDraw));
-    newPos.setY(qMin(qMax(newPos.y(), sceneRect.top() + yInitialDraw), sceneRect.bottom() - yInitialDraw));
+    qreal xvel = vel.x();
+    qreal yvel = vel.y();
+    if(
+            ((sceneRect.left() + xInitialDraw) > newPos.x())||
+            ((sceneRect.right() - xInitialDraw) < newPos.x()))
+    {
+        newPos = pos();
+        xvel = -vel.x();
+    }
+
+    if(
+            ((sceneRect.top() + yInitialDraw) > newPos.y())||
+            ((sceneRect.bottom() - yInitialDraw) < newPos.y()))
+    {
+        newPos = pos();
+        yvel = -vel.y();
+    }
+
+    setVel(QPointF(xvel,yvel));
+}
+
+//    if((sceneRect.Left + xInitialDraw) > newPos.x())
+//    newPos.setX(qMin(qMax(newPos.x(), sceneRect.left() + xInitialDraw), sceneRect.right() - xInitialDraw));
+//    newPos.setY(qMin(qMax(newPos.y(), sceneRect.top() + yInitialDraw), sceneRect.bottom() - yInitialDraw));
 
 /*
 
@@ -162,7 +178,6 @@ void Node::calculateForces()
     newPos.setX(qMin(qMax(newPos.x(), sceneRect.left() + 10), sceneRect.right() - 10));
     newPos.setY(qMin(qMax(newPos.y(), sceneRect.top() + 10), sceneRect.bottom() - 10));
 */
-}
 //! [6]
 
 //! [7]
