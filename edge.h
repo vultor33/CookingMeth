@@ -43,16 +43,16 @@
 
 #include <QGraphicsItem>
 
-class Node;
+class Atom;
 
 //! [0]
 class Edge : public QGraphicsItem
 {
 public:
-    Edge(Node *sourceNode, Node *destNode);
+    Edge(Atom *sourceNode, Atom *destNode);
 
-    Node *sourceNode() const;
-    Node *destNode() const;
+    Atom *sourceNode() const;
+    Atom *destNode() const;
 
     void adjust();
 
@@ -64,7 +64,7 @@ protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) Q_DECL_OVERRIDE;
 
 private:
-    Node *source, *dest;
+    Atom *source, *dest;
 
     QPointF sourcePoint;
     QPointF destPoint;

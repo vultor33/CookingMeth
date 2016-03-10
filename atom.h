@@ -52,10 +52,10 @@ class QGraphicsSceneMouseEvent;
 QT_END_NAMESPACE
 
 //! [0]
-class Node : public QGraphicsItem
+class Atom : public QGraphicsItem
 {
 public:
-    Node(GraphWidget *graphWidget);
+    Atom(GraphWidget *graphWidget);
 
     void addEdge(Edge *edge);
     QList<Edge *> edges() const;

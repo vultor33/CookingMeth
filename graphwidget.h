@@ -45,7 +45,7 @@
 #include <QList>
 #include <vector>
 
-class Node;
+class Atom;
 
 //! [0]
 class GraphWidget : public QGraphicsView
@@ -58,7 +58,6 @@ public:
     void itemMoved();
 
 public slots:
-    void shuffle();
     void zoomIn();
     void zoomOut();
 
@@ -74,9 +73,9 @@ protected:
 
 private:
     int timerId;
-    Node *centerNode;
-    Node *node1;
-    QList<Node *> nodes;
+    Atom *centerNode;
+    Atom *node1;
+    QList<Atom *> nodes;
     std::vector<int> molecule1;
     void changeMoleculeVelocity(std::vector<int> &mol, QPointF newVel);
     bool checkIfMoleculeBounced(std::vector<int> &mol);

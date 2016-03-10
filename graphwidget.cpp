@@ -40,7 +40,7 @@
 
 #include "graphwidget.h"
 #include "edge.h"
-#include "node.h"
+#include "atom.h"
 
 #include <math.h>
 
@@ -48,7 +48,6 @@
 #include <QDebug>
 #include <vector>
 
-//! [0]
 GraphWidget::GraphWidget(QWidget *parent)
     : QGraphicsView(parent), timerId(0)
 {
@@ -63,12 +62,9 @@ GraphWidget::GraphWidget(QWidget *parent)
     scale(qreal(0.8), qreal(0.8));
     setMinimumSize(400, 400);
     setWindowTitle(tr("Elastic Nodes"));
-//! [0]
 
-//! [1]
-
-    node1 = new Node(this);
-    centerNode = new Node(this);
+    node1 = new Atom(this);
+    centerNode = new Atom(this);
     scene->addItem(node1);
     scene->addItem(centerNode);
     node1->setPos(-50, -50);
@@ -79,15 +75,12 @@ GraphWidget::GraphWidget(QWidget *parent)
 
     scene->addItem(new Edge(node1, centerNode));
 }
-//! [1]
 
-//! [2]
 void GraphWidget::itemMoved()
 {
     if (!timerId)
         timerId = startTimer(1000 / 25);
 }
-//! [2]
 
 void GraphWidget::changeMoleculeVelocity(std::vector<int> &mol, QPointF newVel)
 {
@@ -121,7 +114,6 @@ bool GraphWidget::checkIfMoleculeBounced(std::vector<int> &mol)
 }
 
 
-//! [3]
 void GraphWidget::keyPressEvent(QKeyEvent *event)
 {
     switch (event->key()) {
@@ -145,45 +137,38 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
         break;
     case Qt::Key_Space:
     case Qt::Key_Enter:
-        shuffle();
-        break;
     default:
         QGraphicsView::keyPressEvent(event);
     }
 }
-//! [3]
 
-//! [4]
+
 void GraphWidget::timerEvent(QTimerEvent *event)
 {
     Q_UNUSED(event);
 
     foreach (QGraphicsItem *item, scene()->items()) {
-        if (Node *node = qgraphicsitem_cast<Node *>(item))
+        if (Atom *node = qgraphicsitem_cast<Atom *>(item))
             nodes << node;
     }
 
-    foreach (Node *node, nodes)
+    foreach (Atom *node, nodes)
         node->calculateForces();
 
     if(!checkIfMoleculeBounced(molecule1))
     {
-        foreach (Node *node, nodes)
+        foreach (Atom *node, nodes)
             node->advance();
     }
 }
-//! [4]
 
 #ifndef QT_NO_WHEELEVENT
-//! [5]
 void GraphWidget::wheelEvent(QWheelEvent *event)
 {
     scaleView(pow((double)2, -event->delta() / 240.0));
 }
-//! [5]
 #endif
 
-//! [6]
 void GraphWidget::drawBackground(QPainter *painter, const QRectF &rect)
 {
     Q_UNUSED(rect);
@@ -220,9 +205,8 @@ void GraphWidget::drawBackground(QPainter *painter, const QRectF &rect)
     painter->setPen(Qt::black);
     painter->drawText(textRect, message);
 }
-//! [6]
 
-//! [7]
+
 void GraphWidget::scaleView(qreal scaleFactor)
 {
     qreal factor = transform().scale(scaleFactor, scaleFactor).mapRect(QRectF(0, 0, 1, 1)).width();
@@ -230,15 +214,6 @@ void GraphWidget::scaleView(qreal scaleFactor)
         return;
 
     scale(scaleFactor, scaleFactor);
-}
-//! [7]
-
-void GraphWidget::shuffle()
-{
-    foreach (QGraphicsItem *item, scene()->items()) {
-        if (qgraphicsitem_cast<Node *>(item))
-            item->setPos(-150 + qrand() % 300, -150 + qrand() % 300);
-    }
 }
 
 void GraphWidget::zoomIn()

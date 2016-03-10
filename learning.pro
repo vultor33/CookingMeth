@@ -15,9 +15,9 @@ TEMPLATE = app
 SOURCES += main.cpp \
     edge.cpp \
     graphwidget.cpp \
-    node.cpp
+    atom.cpp
 
 HEADERS  += \
     edge.h \
     graphwidget.h \
-    node.h
+    atom.h
