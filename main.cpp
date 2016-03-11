@@ -52,6 +52,8 @@ int main(int argc, char **argv)
     GraphWidget *widget = new GraphWidget;
 
     QMainWindow mainWindow;
+    mainWindow.setFixedHeight(500);
+    mainWindow.setFixedWidth(500);
     mainWindow.setCentralWidget(widget);
 
     mainWindow.show();

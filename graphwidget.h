@@ -83,6 +83,7 @@ private:
     bool checkIfMoleculeBounced(std::vector<int> &mol);
 
     bool showLabel;
+    void showHideLabels();
     struct atomType defineAtom(int nAtomic);
     struct atomType atom1;
     struct atomType atom2;

@@ -54,15 +54,15 @@ GraphWidget::GraphWidget(QWidget *parent)
 {
     QGraphicsScene *scene = new QGraphicsScene(this);
     scene->setItemIndexMethod(QGraphicsScene::NoIndex);
-    scene->setSceneRect(-200, -200, 400, 400);
+    scene->setSceneRect(-500, -500, 1000, 1000);
     setScene(scene);
     setCacheMode(CacheBackground);
     setViewportUpdateMode(BoundingRectViewportUpdate);
     setRenderHint(QPainter::Antialiasing);
     setTransformationAnchor(AnchorUnderMouse);
-    scale(qreal(0.8), qreal(0.8));
-    setMinimumSize(400, 400);
-    setWindowTitle(tr("Elastic Nodes"));
+    //scale(qreal(0.8), qreal(0.8));
+    //setMinimumSize(500, 500);
+    setWindowTitle(tr("Cooking Meth"));
 
     showLabel = true;
     atom1 = defineAtom(9);
@@ -83,7 +83,7 @@ GraphWidget::GraphWidget(QWidget *parent)
 void GraphWidget::itemMoved()
 {
     if (!timerId)
-        timerId = startTimer(1000 / 25);
+        timerId = startTimer(1000 / 50);
 }
 
 void GraphWidget::changeMoleculeVelocity(std::vector<int> &mol, QPointF newVel)
@@ -93,6 +93,18 @@ void GraphWidget::changeMoleculeVelocity(std::vector<int> &mol, QPointF newVel)
         nodes[mol[i]]->changeVel(newVel);
     }
 }
+
+void GraphWidget::showHideLabels()
+{
+    if(showLabel)
+        showLabel = false;
+    else
+        showLabel = true;
+
+    foreach (Atom *node, nodes)
+        node->showHideLabels(showLabel);
+}
+
 
 bool GraphWidget::checkIfMoleculeBounced(std::vector<int> &mol)
 {
@@ -139,6 +151,10 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Minus:
         zoomOut();
         break;
+    case Qt::Key_L:
+        showHideLabels();
+        break;
+
     case Qt::Key_Space:
     case Qt::Key_Enter:
     default:
@@ -169,7 +185,7 @@ void GraphWidget::timerEvent(QTimerEvent *event)
 #ifndef QT_NO_WHEELEVENT
 void GraphWidget::wheelEvent(QWheelEvent *event)
 {
-    scaleView(pow((double)2, -event->delta() / 240.0));
+    //scaleView(pow((double)2, -event->delta() / 240.0));
 }
 #endif
 
@@ -179,22 +195,25 @@ void GraphWidget::drawBackground(QPainter *painter, const QRectF &rect)
 
     // Shadow
     QRectF sceneRect = this->sceneRect();
+    /*
     QRectF rightShadow(sceneRect.right(), sceneRect.top() + 5, 5, sceneRect.height());
     QRectF bottomShadow(sceneRect.left() + 5, sceneRect.bottom(), sceneRect.width(), 5);
     if (rightShadow.intersects(rect) || rightShadow.contains(rect))
         painter->fillRect(rightShadow, Qt::darkGray);
     if (bottomShadow.intersects(rect) || bottomShadow.contains(rect))
         painter->fillRect(bottomShadow, Qt::darkGray);
+    */
 
     // Fill
     QLinearGradient gradient(sceneRect.topLeft(), sceneRect.bottomRight());
     gradient.setColorAt(0, Qt::white);
-    gradient.setColorAt(1, Qt::lightGray);
+    gradient.setColorAt(1, Qt::blue);
     painter->fillRect(rect.intersected(sceneRect), gradient);
     painter->setBrush(Qt::NoBrush);
     painter->drawRect(sceneRect);
 
     // Text
+    /*
     QRectF textRect(sceneRect.left() + 4, sceneRect.top() + 4,
                     sceneRect.width() - 4, sceneRect.height() - 4);
     QString message(tr("Click and drag the nodes around, and zoom with the mouse "
@@ -208,6 +227,8 @@ void GraphWidget::drawBackground(QPainter *painter, const QRectF &rect)
     painter->drawText(textRect.translated(2, 2), message);
     painter->setPen(Qt::black);
     painter->drawText(textRect, message);
+    */
+
 }
 
 
@@ -236,19 +257,19 @@ struct atomType GraphWidget::defineAtom(int nAtomic)
     switch(nAtomic)
     {
     case 1:
-        atomOut.r = 10;
+        atomOut.r = 3;
         atomOut.lightColor = "#ffffff";
         atomOut.darkColor = "#a0a0a4";
         atomOut.atomName = "H";
         break;
     case 9:
-        atomOut.r = 20;
+        atomOut.r = 6;
         atomOut.lightColor = "#ff0000";
         atomOut.darkColor = "#800000";
         atomOut.atomName = "F";
         break;
     case 17:
-        atomOut.r = 30;
+        atomOut.r = 9;
         atomOut.lightColor = "#00ff00";
         atomOut.darkColor = "#008000";
         atomOut.atomName = "Cl";

@@ -100,6 +100,14 @@ void Atom::changeVel(QPointF addVel)
     vel += addVel;
 }
 
+void Atom::showHideLabels(bool showLabel)
+{
+    if(showLabel)
+        name->show();
+    else
+        name->hide();
+}
+
 void Atom::invertVel(int bounceType)
 {
     switch(bounceType)
@@ -180,7 +188,7 @@ QPainterPath Atom::shape() const
 void Atom::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *)
 {
     painter->setPen(Qt::NoPen);
-    painter->setBrush(Qt::darkGray);
+    painter->setBrush(Qt::darkBlue);
     painter->drawEllipse(xInitialDraw +3, yInitialDraw +3, horizSize, vertSize);
 
     QRadialGradient gradient((int)(xInitialDraw/3), (int)(xInitialDraw/3), (int)(horizSize/2));
