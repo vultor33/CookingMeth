@@ -86,6 +86,7 @@ private:
 
     //molecules functions
     void changeMoleculeVelocity(std::vector<int> &mol, QPointF newVel);
+    void angularVelocity(std::vector<int> &mol);
     bool checkIfMoleculeBounced(std::vector<int> &mol);
 
 

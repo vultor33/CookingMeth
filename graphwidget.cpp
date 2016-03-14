@@ -74,9 +74,9 @@ GraphWidget::GraphWidget(QWidget *parent)
     scene->addItem(atom1);
     scene->addItem(atom2);
     scene->addItem(atom3);
-    atom1->setPos(0, 0);
-    atom2->setPos(23, -30);
-    atom3->setPos(30,15);
+    atom1->setPos(100, 0);
+    atom2->setPos(150, 0);
+    atom3->setPos(20, 20);
     molecule1.resize(2);
     molecule1[0] = 0;
     molecule1[1] = 1;
@@ -91,7 +91,7 @@ GraphWidget::GraphWidget(QWidget *parent)
 void GraphWidget::itemMoved()
 {
     if (!timerId)
-        timerId = startTimer(1000 / 50);
+        timerId = startTimer(1000 / 25);
 }
 
 void GraphWidget::changeMoleculeVelocity(std::vector<int> &mol, QPointF newVel)
@@ -99,6 +99,33 @@ void GraphWidget::changeMoleculeVelocity(std::vector<int> &mol, QPointF newVel)
     for(size_t i = 0; i < mol.size(); i++ )
     {
         nodes[mol[i]]->changeVel(newVel);
+    }
+}
+
+void GraphWidget::angularVelocity(std::vector<int> &mol)
+{
+    std::vector<QPointF> allPoints(mol.size());
+    qreal xmean = 0;
+    qreal ymean = 0;
+    for(size_t i = 0; i < mol.size(); i++ )
+    {
+        xmean += nodes[mol[i]]->pos().x();
+        ymean += nodes[mol[i]]->pos().y();
+    }
+    xmean /= mol.size();
+    ymean /= mol.size();
+
+    // new = point - xmean.
+    // rotate
+    // xmean + new
+    qreal angle = 3.14/180;
+    for(size_t i = 0; i < mol.size(); i++ )
+    {
+        qreal vecx = nodes[mol[i]]->pos().x() - xmean;
+        qreal vecy = nodes[mol[i]]->pos().y() - ymean;
+        qreal newx = vecx * cos(angle) + vecy * sin(angle);
+        qreal newy = -vecx * sin(angle) + vecy * cos(angle);
+        nodes[mol[i]]->setPos(newx+xmean,newy+ymean);
     }
 }
 
@@ -196,7 +223,10 @@ void GraphWidget::timerEvent(QTimerEvent *event)
                 checkIfMoleculeBounced(molecule2)))
     {
         foreach (Atom *node, nodes)
+        {
+            angularVelocity(molecule1);
             node->advance();
+        }
     }
 }
 
