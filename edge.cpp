@@ -79,14 +79,15 @@ void Edge::adjust()
 
     prepareGeometryChange();
 
-    qreal lineSize = length - (source->getRadius() + dest->getRadius());
+    // vector + radius to set initial point of lines
     if (length > qreal(20.)) {
-        QPointF edgeOffset1(
-                    source->getRadius()+(line.dx() * lineSize) / length,
-                    source->getRadius()+(line.dy() * lineSize) / length);
-        QPointF edgeOffset2(
-                    dest->getRadius()+(line.dx() * lineSize) / length,
-                    dest->getRadius()+(line.dy() * lineSize) / length);
+        qreal xSource = (line.dx() / length) * source->getRadius();
+        qreal ySource = (line.dy() / length) * source->getRadius();
+        QPointF edgeOffset1(xSource,ySource);
+
+        qreal xDest = (line.dx() / length) * dest->getRadius();
+        qreal yDest = (line.dy() / length) * dest->getRadius();
+        QPointF edgeOffset2(xDest,yDest);
         sourcePoint = line.p1() + edgeOffset1;
         destPoint = line.p2() - edgeOffset2;
     } else {

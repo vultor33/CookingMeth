@@ -75,18 +75,26 @@ protected:
 
 private:
     int timerId;
-    Atom *centerNode;
-    Atom *node1;
+
+    // molecules
+    Atom *atom1;
+    Atom *atom2;
+    Atom *atom3;
     QList<Atom *> nodes;
     std::vector<int> molecule1;
+    std::vector<int> molecule2;
+
+    //molecules functions
     void changeMoleculeVelocity(std::vector<int> &mol, QPointF newVel);
     bool checkIfMoleculeBounced(std::vector<int> &mol);
+
 
     bool showLabel;
     void showHideLabels();
     struct atomType defineAtom(int nAtomic);
-    struct atomType atom1;
-    struct atomType atom2;
+    struct atomType atomType1;
+    struct atomType atomType2;
+    struct atomType atomType3;
 
 };
 //! [0]

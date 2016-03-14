@@ -55,7 +55,7 @@ int main(int argc, char **argv)
     mainWindow.setFixedHeight(500);
     mainWindow.setFixedWidth(500);
     mainWindow.setCentralWidget(widget);
-
     mainWindow.show();
+
     return app.exec();
 }

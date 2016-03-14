@@ -54,7 +54,7 @@ GraphWidget::GraphWidget(QWidget *parent)
 {
     QGraphicsScene *scene = new QGraphicsScene(this);
     scene->setItemIndexMethod(QGraphicsScene::NoIndex);
-    scene->setSceneRect(-500, -500, 1000, 1000);
+    scene->setSceneRect(-250, -250, 490, 490);
     setScene(scene);
     setCacheMode(CacheBackground);
     setViewportUpdateMode(BoundingRectViewportUpdate);
@@ -65,19 +65,27 @@ GraphWidget::GraphWidget(QWidget *parent)
     setWindowTitle(tr("Cooking Meth"));
 
     showLabel = true;
-    atom1 = defineAtom(9);
-    atom2 = defineAtom(17);
-    node1 = new Atom(this,atom1);
-    centerNode = new Atom(this,atom2);
-    scene->addItem(node1);
-    scene->addItem(centerNode);
-    node1->setPos(-50, -50);
-    centerNode->setPos(0, 0);
+    atomType1 = defineAtom(1);
+    atomType2 = defineAtom(9);
+    atomType3 = defineAtom(17);
+    atom1 = new Atom(this,atomType1);
+    atom2 = new Atom(this,atomType3);
+    atom3 = new Atom(this,atomType2);
+    scene->addItem(atom1);
+    scene->addItem(atom2);
+    scene->addItem(atom3);
+    atom1->setPos(0, 0);
+    atom2->setPos(23, -30);
+    atom3->setPos(30,15);
     molecule1.resize(2);
     molecule1[0] = 0;
     molecule1[1] = 1;
+    molecule2.resize(1);
+    molecule2[0] = 2;
 
-    scene->addItem(new Edge(node1, centerNode));
+    atom3->setVel(QPointF(1,-1));
+
+    scene->addItem(new Edge(atom2, atom1));
 }
 
 void GraphWidget::itemMoved()
@@ -93,6 +101,14 @@ void GraphWidget::changeMoleculeVelocity(std::vector<int> &mol, QPointF newVel)
         nodes[mol[i]]->changeVel(newVel);
     }
 }
+
+// define center of molecule -> mass center.
+// pra rodar e so setar uma velocidade em relacao ao centro de massa.
+// preciso definir uma velocidade angular do lado de fora e mover
+// cada atomo de acordo com essa velocidade angular.
+// como nao vai alterar o centro de massa, a ordem dos movimentos nao importa.
+
+
 
 void GraphWidget::showHideLabels()
 {
@@ -175,7 +191,9 @@ void GraphWidget::timerEvent(QTimerEvent *event)
     foreach (Atom *node, nodes)
         node->calculateForces();
 
-    if(!checkIfMoleculeBounced(molecule1))
+    if(!(
+                checkIfMoleculeBounced(molecule1)||
+                checkIfMoleculeBounced(molecule2)))
     {
         foreach (Atom *node, nodes)
             node->advance();
@@ -257,19 +275,19 @@ struct atomType GraphWidget::defineAtom(int nAtomic)
     switch(nAtomic)
     {
     case 1:
-        atomOut.r = 3;
+        atomOut.r = 6;
         atomOut.lightColor = "#ffffff";
         atomOut.darkColor = "#a0a0a4";
         atomOut.atomName = "H";
         break;
     case 9:
-        atomOut.r = 6;
+        atomOut.r = 9;
         atomOut.lightColor = "#ff0000";
         atomOut.darkColor = "#800000";
         atomOut.atomName = "F";
         break;
     case 17:
-        atomOut.r = 9;
+        atomOut.r = 12;
         atomOut.lightColor = "#00ff00";
         atomOut.darkColor = "#008000";
         atomOut.atomName = "Cl";
