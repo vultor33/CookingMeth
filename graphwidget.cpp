@@ -89,14 +89,20 @@ GraphWidget::GraphWidget(QWidget *parent)
     atom5->setPos(25, 0);
     scene->addItem(atom4);
     scene->addItem(atom5);
+    scene->addItem(new Edge(atom4, atom5));
 
     QList<QGraphicsItem *> all = scene->items();
     QList<QGraphicsItem *> mol5;
-    mol5 << all[6] << all[7] << all[8] << all[9];
+    mol5 << all[6] << all[7] << all[8] << all[9] << all[10];
     group = scene->createItemGroup(mol5);
 
-    // Quando o grupo e criado ele fica no zero zero.
     group->setPos(-125,0);
+    //group->removeFromGroup(atom4);
+    //group->addToGroup(atom4);
+    group->setPos(-100,-200);
+
+    // Quando o grupo e criado ele fica no zero zero.
+
     group->setRotation(120);
 
     atom3->setVel(QPointF(1,-1));
