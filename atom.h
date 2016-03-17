@@ -76,8 +76,10 @@ public:
     void invertVel(int bounceType);
     QPointF getVel();
     qreal getRadius();
+    void setAtomPosition(QPointF newPosition);
+    QPointF getAtomPosition() const;
 
-    int checkBounce(QPointF molPos);//0-no | 1-x | 2-y | 3-xy
+    int checkBounce();//0-no | 1-x | 2-y | 3-xy
     void showHideLabels(bool showLabel);
 
 protected:
@@ -92,6 +94,8 @@ private:
     GraphWidget *graph;
     QGraphicsSimpleTextItem *name;
     QPointF vel;
+    QPointF atomPosition;
+
 
     // creating figure
     qreal xInitialDraw;

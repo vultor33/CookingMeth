@@ -139,10 +139,21 @@ qreal Atom::getRadius()
     return -xInitialDraw;
 }
 
-int Atom::checkBounce(QPointF molPos)
+void Atom::setAtomPosition(QPointF newPosition)
+{
+    atomPosition = newPosition;
+}
+
+QPointF Atom::getAtomPosition() const
+{
+    return atomPosition;
+}
+
+
+int Atom::checkBounce()
 {
     QRectF sceneRect = scene()->sceneRect();
-    QPointF actualPosition = molPos;
+    QPointF actualPosition = atomPosition;
     qreal safeSize = 5 * adjustBoundingSize;
     int bounce = 0;
     if(

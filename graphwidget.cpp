@@ -194,7 +194,6 @@ bool GraphWidget::checkIfMoleculeBounced(QGraphicsItemGroup *mol, qreal& Vx, qre
     }
     bool bounced = false;
     int bounceType;
-    QPointF molPosition;
     qreal angle = mol->rotation() * _M_Pi/180;
     qreal newx, newy, vecx, vecy;
 
@@ -202,12 +201,11 @@ bool GraphWidget::checkIfMoleculeBounced(QGraphicsItemGroup *mol, qreal& Vx, qre
     {
         vecx = molAtoms[i]->x();
         vecy = molAtoms[i]->y();
-        newx = vecx * cos(angle) + vecy * sin(angle);
-        newy = -vecx * sin(angle) + vecy * cos(angle);
+        newx = vecx * cos(angle) - vecy * sin(angle);
+        newy = vecx * sin(angle) + vecy * cos(angle);
+        molAtoms[i]->setAtomPosition(QPointF(mol->pos().x() + newx, mol->pos().y() + newy));
 
-        molPosition.setX(mol->pos().x() + newx);
-        molPosition.setY(mol->pos().y() + newy);
-        bounceType = molAtoms[i]->checkBounce(molPosition);
+        bounceType = molAtoms[i]->checkBounce();
         if(bounceType > 0)
         {
             bounced = true;
@@ -297,7 +295,9 @@ void GraphWidget::timerEvent(QTimerEvent *event)
     Q_UNUSED(event);
 
 
-    checkIfMoleculeBounced(mol1,mol1Vx,mol1Vy);
+    if(checkIfMoleculeBounced(mol1,mol1Vx,mol1Vy))
+        mol1Angular *= -1;
+
     mol1->moveBy(mol1Vx,mol1Vy);
     mol1Angle += mol1Angular;
     mol1->setRotation(mol1Angle);
