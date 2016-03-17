@@ -48,6 +48,7 @@
 #include "atomstruct.h"
 
 class Atom;
+class Edge;
 
 //! [0]
 class GraphWidget : public QGraphicsView
@@ -84,9 +85,16 @@ private:
     std::vector<int> molecule1;
     std::vector<int> molecule2;
 
+    // group
+    QGraphicsItemGroup *mol1;
     Atom *atom4;
     Atom *atom5;
-    QGraphicsItemGroup *group;
+    Edge *bond4to5;
+    QGraphicsItemGroup *mol2;
+    Atom *atom6;
+    Edge *bond4to6;
+
+
 
     //molecules functions
     void changeMoleculeVelocity(std::vector<int> &mol, QPointF newVel);

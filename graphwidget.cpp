@@ -83,30 +83,35 @@ GraphWidget::GraphWidget(QWidget *parent)
     molecule2.resize(1);
     molecule2[0] = 2;
 
+    // Quando o grupo e criado ele fica no zero zero.
+    // mol1
     atom4 = new Atom(this,atomType1);
     atom5 = new Atom(this,atomType3);
+    atom6 = new Atom(this,atomType2);
     atom4->setPos(-25, 0);
     atom5->setPos(25, 0);
+    atom6->setPos(0,0);
+    bond4to5 = new Edge(atom4,atom5);
     scene->addItem(atom4);
     scene->addItem(atom5);
-    scene->addItem(new Edge(atom4, atom5));
+    scene->addItem(bond4to5);
+    scene->addItem(atom6);
 
-    QList<QGraphicsItem *> all = scene->items();
     QList<QGraphicsItem *> mol5;
-    mol5 << all[6] << all[7] << all[8] << all[9] << all[10];
-    group = scene->createItemGroup(mol5);
+    mol5 << atom4 << atom5 << bond4to5;
+    mol1 = scene->createItemGroup(mol5);
+    QList<QGraphicsItem *> mol6;
+    mol6 << atom6;
+    mol2 = scene->createItemGroup(mol6);
 
-    group->setPos(-125,0);
-    //group->removeFromGroup(atom4);
-    //group->addToGroup(atom4);
-    group->setPos(-100,-200);
+    mol1->setPos(-125,0);
+    mol2->setPos(100,-100);
 
-    // Quando o grupo e criado ele fica no zero zero.
+    mol1->setRotation(120);
+    //fim do mol1
 
-    group->setRotation(120);
 
     atom3->setVel(QPointF(1,-1));
-
     scene->addItem(new Edge(atom2, atom1));
 }
 
