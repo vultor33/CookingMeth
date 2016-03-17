@@ -139,17 +139,19 @@ qreal Atom::getRadius()
     return -xInitialDraw;
 }
 
-int Atom::checkBounce()
+int Atom::checkBounce(QPointF molPos)
 {
     QRectF sceneRect = scene()->sceneRect();
+    QPointF actualPosition = molPos;
+    qreal safeSize = 5 * adjustBoundingSize;
     int bounce = 0;
     if(
-            ((sceneRect.left() + xInitialDraw + horizSize) > newPos.x())||
-            ((sceneRect.right() - xInitialDraw - horizSize) < newPos.x()))
+            ((sceneRect.left() + xInitialDraw + horizSize + safeSize) > actualPosition.x())||
+            ((sceneRect.right() - xInitialDraw - horizSize - safeSize) < actualPosition.x()))
         bounce += 1;
     if(
-            ((sceneRect.top() + yInitialDraw + vertSize) > newPos.y())||
-            ((sceneRect.bottom() - yInitialDraw - vertSize) < newPos.y()))
+            ((sceneRect.top() + yInitialDraw + vertSize + safeSize) > actualPosition.y())||
+            ((sceneRect.bottom() - yInitialDraw - vertSize - safeSize) < actualPosition.y()))
         bounce += 2;
 
     return bounce;

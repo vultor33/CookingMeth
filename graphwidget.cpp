@@ -105,9 +105,12 @@ GraphWidget::GraphWidget(QWidget *parent)
     mol2 = scene->createItemGroup(mol6);
 
     mol1->setPos(-125,0);
+    mol1Angle = 0;
     mol2->setPos(100,-100);
 
-    mol1->setRotation(120);
+    mol1Vx = 0.1;
+    mol1Vy = 3;
+    mol1Angular = 3;
     //fim do mol1
 
 
@@ -176,13 +179,69 @@ void GraphWidget::showHideLabels()
 }
 
 
+
+//foreach (QGraphicsItem *item, scene()->items()) {
+//    if (Atom *node = qgraphicsitem_cast<Atom *>(item))
+//        nodes << node;
+//}
+
+bool GraphWidget::checkIfMoleculeBounced(QGraphicsItemGroup *mol, qreal& Vx, qreal& Vy)
+{
+    QList<Atom *> molAtoms;
+    foreach (QGraphicsItem *item, mol->childItems()) {
+        if (Atom *atom = qgraphicsitem_cast<Atom *>(item))
+            molAtoms << atom;
+    }
+    bool bounced = false;
+    int bounceType;
+    QPointF molPosition;
+    qreal angle = mol->rotation() * _M_Pi/180;
+    qreal newx, newy, vecx, vecy;
+
+    for(int i = 0; i < molAtoms.size(); i++ )
+    {
+        vecx = molAtoms[i]->x();
+        vecy = molAtoms[i]->y();
+        newx = vecx * cos(angle) + vecy * sin(angle);
+        newy = -vecx * sin(angle) + vecy * cos(angle);
+
+        molPosition.setX(mol->pos().x() + newx);
+        molPosition.setY(mol->pos().y() + newy);
+        bounceType = molAtoms[i]->checkBounce(molPosition);
+        if(bounceType > 0)
+        {
+            bounced = true;
+            break;
+        }
+    }
+    if(!bounced)
+        return bounced;
+
+    switch(bounceType)
+    {
+    case 1:
+        Vx *= -1.0;
+        break;
+    case 2:
+        Vy *= -1.0;
+        break;
+    case 3:
+        Vx *= -1.0;
+        Vy *= -1.0;
+        break;
+    }
+
+    return bounced;
+}
+
+
 bool GraphWidget::checkIfMoleculeBounced(std::vector<int> &mol)
 {
     bool bounced = false;
     int bounceType;
     for(size_t i = 0; i < mol.size(); i++ )
     {
-        bounceType = nodes[mol[i]]->checkBounce();
+        //bounceType = nodes[mol[i]]->checkBounce();
         if(bounceType > 0)
         {
             bounced = true;
@@ -236,6 +295,13 @@ void GraphWidget::keyPressEvent(QKeyEvent *event)
 void GraphWidget::timerEvent(QTimerEvent *event)
 {
     Q_UNUSED(event);
+
+
+    checkIfMoleculeBounced(mol1,mol1Vx,mol1Vy);
+    mol1->moveBy(mol1Vx,mol1Vy);
+    mol1Angle += mol1Angular;
+    mol1->setRotation(mol1Angle);
+//    mol1->setTransform(mol1->transform()*(QTransform().rotate(mol1Angular)));
 
     foreach (QGraphicsItem *item, scene()->items()) {
         if (Atom *node = qgraphicsitem_cast<Atom *>(item))

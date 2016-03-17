@@ -77,6 +77,8 @@ protected:
 private:
     int timerId;
 
+    qreal _M_Pi = 3.141592653589;
+
     // molecules
     Atom *atom1;
     Atom *atom2;
@@ -90,9 +92,15 @@ private:
     Atom *atom4;
     Atom *atom5;
     Edge *bond4to5;
+    qreal mol1Vx;
+    qreal mol1Vy;
+    qreal mol1Angle;
+    qreal mol1Angular;
     QGraphicsItemGroup *mol2;
     Atom *atom6;
     Edge *bond4to6;
+
+    bool checkIfMoleculeBounced(QGraphicsItemGroup *mol, qreal& Vx, qreal& Vy);
 
 
 

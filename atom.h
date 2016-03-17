@@ -77,7 +77,7 @@ public:
     QPointF getVel();
     qreal getRadius();
 
-    int checkBounce();//0-no | 1-x | 2-y | 3-xy
+    int checkBounce(QPointF molPos);//0-no | 1-x | 2-y | 3-xy
     void showHideLabels(bool showLabel);
 
 protected:
@@ -101,6 +101,7 @@ private:
     qreal adjustBoundingSize;
     QColor lightColor;
     QColor darkColor;
+
 
 };
 //! [0]
