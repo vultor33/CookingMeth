@@ -124,49 +124,6 @@ void GraphWidget::itemMoved()
         timerId = startTimer(1000 / 25);
 }
 
-void GraphWidget::changeMoleculeVelocity(std::vector<int> &mol, QPointF newVel)
-{
-    for(size_t i = 0; i < mol.size(); i++ )
-    {
-        nodes[mol[i]]->changeVel(newVel);
-    }
-}
-
-void GraphWidget::angularVelocity(std::vector<int> &mol)
-{
-    std::vector<QPointF> allPoints(mol.size());
-    qreal xmean = 0;
-    qreal ymean = 0;
-    for(size_t i = 0; i < mol.size(); i++ )
-    {
-        xmean += nodes[mol[i]]->pos().x();
-        ymean += nodes[mol[i]]->pos().y();
-    }
-    xmean /= mol.size();
-    ymean /= mol.size();
-
-    // new = point - xmean.
-    // rotate
-    // xmean + new
-    qreal angle = 3.14/180;
-    for(size_t i = 0; i < mol.size(); i++ )
-    {
-        qreal vecx = nodes[mol[i]]->pos().x() - xmean;
-        qreal vecy = nodes[mol[i]]->pos().y() - ymean;
-        qreal newx = vecx * cos(angle) + vecy * sin(angle);
-        qreal newy = -vecx * sin(angle) + vecy * cos(angle);
-        nodes[mol[i]]->setPos(newx+xmean,newy+ymean);
-    }
-}
-
-// define center of molecule -> mass center.
-// pra rodar e so setar uma velocidade em relacao ao centro de massa.
-// preciso definir uma velocidade angular do lado de fora e mover
-// cada atomo de acordo com essa velocidade angular.
-// como nao vai alterar o centro de massa, a ordem dos movimentos nao importa.
-
-
-
 void GraphWidget::showHideLabels()
 {
     if(showLabel)
@@ -174,16 +131,18 @@ void GraphWidget::showHideLabels()
     else
         showLabel = true;
 
-    foreach (Atom *node, nodes)
-        node->showHideLabels(showLabel);
+    foreach (QGraphicsItem *item, mol1->childItems()) {
+        if (Atom *atom = qgraphicsitem_cast<Atom *>(item))
+            atom->showHideLabels(showLabel);
+    }
+    foreach (QGraphicsItem *item, mol2->childItems()) {
+        if (Atom *atom = qgraphicsitem_cast<Atom *>(item))
+            atom->showHideLabels(showLabel);
+    }
+
+
+
 }
-
-
-
-//foreach (QGraphicsItem *item, scene()->items()) {
-//    if (Atom *node = qgraphicsitem_cast<Atom *>(item))
-//        nodes << node;
-//}
 
 bool GraphWidget::checkIfMoleculeBounced(QGraphicsItemGroup *mol, qreal& Vx, qreal& Vy)
 {
@@ -232,46 +191,28 @@ bool GraphWidget::checkIfMoleculeBounced(QGraphicsItemGroup *mol, qreal& Vx, qre
     return bounced;
 }
 
-
-bool GraphWidget::checkIfMoleculeBounced(std::vector<int> &mol)
-{
-    bool bounced = false;
-    int bounceType;
-    for(size_t i = 0; i < mol.size(); i++ )
-    {
-        //bounceType = nodes[mol[i]]->checkBounce();
-        if(bounceType > 0)
-        {
-            bounced = true;
-            break;
-        }
-    }
-    if(!bounced)
-        return bounced;
-
-    for(size_t i = 0; i < mol.size(); i++ )
-    {
-        nodes[mol[i]]->invertVel(bounceType);
-    }
-    return bounced;
-}
-
-
 void GraphWidget::keyPressEvent(QKeyEvent *event)
 {
     switch (event->key()) {
     case Qt::Key_Up:
-        changeMoleculeVelocity(molecule1,QPointF(0,-1));
+        mol1Vy -= 1;
         break;
     case Qt::Key_Down:
-        changeMoleculeVelocity(molecule1,QPointF(0,1));
+        mol1Vy += 1;
         break;
     case Qt::Key_Left:
-        changeMoleculeVelocity(molecule1,QPointF(-1,0));
+        mol1Vx -= 1;
         break;
     case Qt::Key_Right:
-        changeMoleculeVelocity(molecule1,QPointF(1,0));
+        mol1Vx += 1;
         break;
+    case Qt::Key_Q:
+        mol1Angular += 1;
+        break;
+    case Qt::Key_W:
+        mol1Angular -= 1;
+        break;
+
     case Qt::Key_Plus:
         zoomIn();
         break;
@@ -294,33 +235,15 @@ void GraphWidget::timerEvent(QTimerEvent *event)
 {
     Q_UNUSED(event);
 
-
     if(checkIfMoleculeBounced(mol1,mol1Vx,mol1Vy))
         mol1Angular *= -1;
 
     mol1->moveBy(mol1Vx,mol1Vy);
     mol1Angle += mol1Angular;
     mol1->setRotation(mol1Angle);
-//    mol1->setTransform(mol1->transform()*(QTransform().rotate(mol1Angular)));
 
-    foreach (QGraphicsItem *item, scene()->items()) {
-        if (Atom *node = qgraphicsitem_cast<Atom *>(item))
-            nodes << node;
-    }
+    // calculate forces
 
-    foreach (Atom *node, nodes)
-        node->calculateForces();
-
-    if(!(
-                checkIfMoleculeBounced(molecule1)||
-                checkIfMoleculeBounced(molecule2)))
-    {
-        foreach (Atom *node, nodes)
-        {
-            angularVelocity(molecule1);
-            node->advance();
-        }
-    }
 }
 
 #ifndef QT_NO_WHEELEVENT

@@ -75,7 +75,7 @@ Atom::Atom(GraphWidget *graphWidget, struct atomType atomIn)
         name = new QGraphicsSimpleTextItem(this);
         name->setFlag(QGraphicsItem::ItemIgnoresTransformations);
         name->setText(atomIn.atomName);
-        name->setPos((int)(xInitialDraw/2),(int)(yInitialDraw/2));
+        name->setPos((int)(xInitialDraw/2),-3 + (int)(yInitialDraw/2));
         name->setFont(QFont("Times", -xInitialDraw, QFont::Bold));
         name->hide();
     }
