@@ -84,6 +84,10 @@ private:
     std::vector<int> molecule1;
     std::vector<int> molecule2;
 
+    Atom *atom4;
+    Atom *atom5;
+    QGraphicsItemGroup *group;
+
     //molecules functions
     void changeMoleculeVelocity(std::vector<int> &mol, QPointF newVel);
     void angularVelocity(std::vector<int> &mol);

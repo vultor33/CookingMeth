@@ -53,6 +53,7 @@
 Atom::Atom(GraphWidget *graphWidget, struct atomType atomIn)
     : graph(graphWidget)
 {
+    setFlag(QGraphicsItem::ItemIgnoresTransformations); // a luz nao pode rodar.
     setFlag(ItemSendsGeometryChanges); // quando o cara e movimentado voce manda um aviso
     setCacheMode(DeviceCoordinateCache);// otimiza renderizacao
     setZValue(-1);
@@ -72,10 +73,13 @@ Atom::Atom(GraphWidget *graphWidget, struct atomType atomIn)
     if(atomIn.atomName != "")
     {
         name = new QGraphicsSimpleTextItem(this);
+        name->setFlag(QGraphicsItem::ItemIgnoresTransformations);
         name->setText(atomIn.atomName);
-        name->setPos((int)(xInitialDraw/2),(int)(-3 + yInitialDraw/2));
+        name->setPos((int)(xInitialDraw/2),(int)(yInitialDraw/2));
         name->setFont(QFont("Times", -xInitialDraw, QFont::Bold));
+        name->hide();
     }
+
 }
 
 void Atom::addEdge(Edge *edge)
