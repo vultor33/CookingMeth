@@ -149,6 +149,11 @@ QPointF Atom::getAtomPosition() const
     return atomPosition;
 }
 
+void Atom::activateDeactivateRotations(bool rotOnOff)
+{
+    setFlag(QGraphicsItem::ItemIgnoresTransformations,rotOnOff);
+}
+
 
 int Atom::checkBounce()
 {

@@ -285,10 +285,10 @@ void GraphWidget::calculateForces()
                     doReaction = true;
                 }
 
-                if(r < 0.1)
-                    r=0.1;
+                if(r < (molAtomsI[i]->getRadius()+molAtomsJ[j]->getRadius()))
+                    r=molAtomsI[i]->getRadius()+molAtomsJ[j]->getRadius();
 
-                r3 = (r * r * r) / 10;
+                r3 = (r * r) / 1;
                 Fxi += molAtomsI[i]->getAtomPosition().x()/r3;
                 Fxj -= molAtomsJ[j]->getAtomPosition().x()/r3;
                 Fyi += molAtomsI[i]->getAtomPosition().y()/r3;
@@ -306,6 +306,12 @@ void GraphWidget::calculateForces()
         mol2->removeFromGroup(atom6);
         mol1->addToGroup(atom6);
         mol2->addToGroup(atom5);
+        atom6->activateDeactivateRotations(false);
+        atom6->setRotation(mol1->rotation());
+        atom6->activateDeactivateRotations(true);
+        atom5->activateDeactivateRotations(false);
+        atom5->setRotation(mol2->rotation());
+        atom5->activateDeactivateRotations(true);
 
         QPointF keepMol1Pos = mol1->pos();
         qreal mol1Rot = mol1->rotation();

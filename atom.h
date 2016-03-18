@@ -81,6 +81,7 @@ public:
 
     int checkBounce();//0-no | 1-x | 2-y | 3-xy
     void showHideLabels(bool showLabel);
+    void activateDeactivateRotations(bool rotOnOff);
 
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) Q_DECL_OVERRIDE;
