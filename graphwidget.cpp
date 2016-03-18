@@ -81,6 +81,11 @@ GraphWidget::GraphWidget(QWidget *parent)
     scene->addItem(bond4to5);
     scene->addItem(atom6);
 
+    //bond 46
+    //bond4to6 = new Edge(atom4,atom6);
+    //scene->addItem(bond4to6);
+    //bond4to6->hide();
+
     QList<QGraphicsItem *> mol5;
     mol5 << atom4 << atom5 << bond4to5;
     mol1 = scene->createItemGroup(mol5);
@@ -125,41 +130,6 @@ void GraphWidget::showHideLabels()
         if (Atom *atom = qgraphicsitem_cast<Atom *>(item))
             atom->showHideLabels(showLabel);
     }
-}
-
-void GraphWidget::defineAtomPositions()
-{
-    qreal angle = mol1->rotation() * _M_Pi/180;
-    qreal newx, newy, vecx, vecy;
-    QList<Atom *> molAtoms1;
-    foreach (QGraphicsItem *item, mol1->childItems()) {
-        if (Atom *atom = qgraphicsitem_cast<Atom *>(item))
-            molAtoms1 << atom;
-    }
-    for(int i = 0; i < molAtoms1.size(); i++ )
-    {
-        vecx = molAtoms1[i]->x();
-        vecy = molAtoms1[i]->y();
-        newx = vecx * cos(angle) - vecy * sin(angle);
-        newy = vecx * sin(angle) + vecy * cos(angle);
-        molAtoms1[i]->setAtomPosition(QPointF(mol1->pos().x() + newx, mol1->pos().y() + newy));
-    }
-
-    QList<Atom *> molAtoms2;
-    foreach (QGraphicsItem *item, mol2->childItems()) {
-        if (Atom *atom = qgraphicsitem_cast<Atom *>(item))
-            molAtoms2 << atom;
-    }
-    angle = mol2->rotation() * _M_Pi/180;
-    for(int i = 0; i < molAtoms2.size(); i++ )
-    {
-        vecx = molAtoms2[i]->x();
-        vecy = molAtoms2[i]->y();
-        newx = vecx * cos(angle) - vecy * sin(angle);
-        newy = vecx * sin(angle) + vecy * cos(angle);
-        molAtoms2[i]->setAtomPosition(QPointF(mol2->pos().x() + newx, mol2->pos().y() + newy));
-    }
-
 }
 
 bool GraphWidget::checkIfMoleculeBounced(QGraphicsItemGroup *mol, qreal& Vx, qreal& Vy)
@@ -253,21 +223,21 @@ void GraphWidget::timerEvent(QTimerEvent *event)
 {
     Q_UNUSED(event);
 
-    defineAtomPositions();
-
     if(checkIfMoleculeBounced(mol1,mol1Vx,mol1Vy))
         mol1Angular *= -1;
-
     mol1->moveBy(mol1Vx,mol1Vy);
     mol1Angle += mol1Angular;
     mol1->setRotation(mol1Angle);
+    if(checkIfMoleculeBounced(mol1,mol1Vx,mol1Vy))
+        mol1->moveBy(mol1Vx,mol1Vy);
 
     if(checkIfMoleculeBounced(mol2,mol2Vx,mol2Vy))
         mol2Angular *= -1;
-
     mol2->moveBy(mol2Vx,mol2Vy);
     mol2Angle += mol2Angular;
     mol2->setRotation(mol2Angle);
+    if(checkIfMoleculeBounced(mol2,mol2Vx,mol2Vy))
+        mol2->moveBy(mol2Vx,mol2Vy);
 
     calculateForces();
 
@@ -309,8 +279,11 @@ void GraphWidget::calculateForces()
                             (molAtomsI[i]->getAtomPosition().y()-
                              molAtomsJ[j]->getAtomPosition().y())
                             );
-//                if((i=0) && (reaction) && (r < 7))
-//                    doReaction = true;
+
+                if((i==0) && (reaction) && (r < 40))
+                {
+                    doReaction = true;
+                }
 
                 if(r < 0.1)
                     r=0.1;
@@ -327,13 +300,24 @@ void GraphWidget::calculateForces()
     {
         reaction = false;
         bond4to5->hide();
-
-        bond4to6 = new Edge(atom4,atom6);
+/*
         mol1->removeFromGroup(atom5);
         mol1->removeFromGroup(bond4to5);
         mol2->removeFromGroup(atom6);
         mol1->addToGroup(atom6);
         mol2->addToGroup(atom5);
+
+        QPointF keepMol1Pos = mol1->pos();
+        qreal mol1Rot = mol1->rotation();
+
+        mol1->setPos(0,0);
+        mol1->setRotation(0);
+        bond4to6->adjust();
+        mol1->addToGroup(bond4to6);
+        mol1->setPos(keepMol1Pos.x(),keepMol1Pos.y());
+        mol1->setRotation(mol1Rot);
+        bond4to6->show();
+        */
     }
 
     mol1Vx += Fxi;
