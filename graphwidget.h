@@ -76,16 +76,7 @@ protected:
 
 private:
     int timerId;
-
-    qreal _M_Pi = 3.141592653589;
-
-    // molecules
-    Atom *atom1;
-    Atom *atom2;
-    Atom *atom3;
-    QList<Atom *> nodes;
-    std::vector<int> molecule1;
-    std::vector<int> molecule2;
+    qreal _M_Pi;
 
     // group
     QGraphicsItemGroup *mol1;
@@ -98,17 +89,19 @@ private:
     qreal mol1Angular;
     QGraphicsItemGroup *mol2;
     Atom *atom6;
+    qreal mol2Vx;
+    qreal mol2Vy;
+    qreal mol2Angle;
+    qreal mol2Angular;
     Edge *bond4to6;
 
+    void calculateForces();
+    bool reaction;
+
+    // criar um QList<QGraphicsItemGroup *mol> - e colocar todas as moleculas nele.
+    // QList<Atom *> e QList<Edge *> QList<struct atomProperties*>
+
     bool checkIfMoleculeBounced(QGraphicsItemGroup *mol, qreal& Vx, qreal& Vy);
-
-
-
-    //molecules functions
-    void changeMoleculeVelocity(std::vector<int> &mol, QPointF newVel);
-    void angularVelocity(std::vector<int> &mol);
-    bool checkIfMoleculeBounced(std::vector<int> &mol);
-
 
     bool showLabel;
     void showHideLabels();
