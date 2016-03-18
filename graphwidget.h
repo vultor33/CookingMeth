@@ -95,6 +95,8 @@ private:
     qreal mol2Angular;
     Edge *bond4to6;
 
+    void defineAtomPositions();
+
     void calculateForces();
     bool reaction;
 
