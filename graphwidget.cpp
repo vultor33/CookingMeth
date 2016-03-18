@@ -82,9 +82,9 @@ GraphWidget::GraphWidget(QWidget *parent)
     scene->addItem(atom6);
 
     //bond 46
-    //bond4to6 = new Edge(atom4,atom6);
-    //scene->addItem(bond4to6);
-    //bond4to6->hide();
+    bond4to6 = new Edge(atom4,atom6);
+    scene->addItem(bond4to6);
+    bond4to6->hide();
 
     QList<QGraphicsItem *> mol5;
     mol5 << atom4 << atom5 << bond4to5;
@@ -300,7 +300,7 @@ void GraphWidget::calculateForces()
     {
         reaction = false;
         bond4to5->hide();
-/*
+
         mol1->removeFromGroup(atom5);
         mol1->removeFromGroup(bond4to5);
         mol2->removeFromGroup(atom6);
@@ -317,7 +317,6 @@ void GraphWidget::calculateForces()
         mol1->setPos(keepMol1Pos.x(),keepMol1Pos.y());
         mol1->setRotation(mol1Rot);
         bond4to6->show();
-        */
     }
 
     mol1Vx += Fxi;

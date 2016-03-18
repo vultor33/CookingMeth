@@ -59,3 +59,16 @@ int main(int argc, char **argv)
 
     return app.exec();
 }
+
+/*
+ * - Preciso de uma cena mais maleavel, que seja facil adicionar mais coisas.
+ * - Colocar um botao que altera o pH, ai H+ e OH- vao surgindo do nada.
+ * - Corrigir a rotacao da sombra do fluor depois da reacao.
+ *
+ *
+ *
+ *
+ *
+ *
+*/
+
